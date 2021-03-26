@@ -9,4 +9,5 @@ public class User {
     String login;
     String name;
     String email;
+
 }

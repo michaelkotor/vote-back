@@ -9,6 +9,7 @@ import io.micronaut.http.annotation.QueryValue;
 import io.micronaut.security.annotation.Secured;
 import io.micronaut.security.rules.SecurityRule;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +29,11 @@ public class ActionsController {
 
     @Get
     public List<StatusActions.Action> getActionsByStatus(@QueryValue String status) {
-        return statusActionsSet.stream().findFirst()
-                .filter(statusActions -> status.equals(statusActions.getStatus().name())).orElseThrow().getActions();
+        for(StatusActions statusActions : statusActionsSet) {
+            if(statusActions.getStatus().name().equals(status)) {
+                return statusActions.getActions();
+            }
+        }
+        throw new InvalidParameterException("No such Status: " + status);
     }
 }
