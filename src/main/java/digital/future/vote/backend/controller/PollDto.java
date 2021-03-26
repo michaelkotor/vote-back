@@ -3,35 +3,30 @@ package digital.future.vote.backend.controller;
 import digital.future.vote.backend.domain.ParticipantList;
 import digital.future.vote.backend.domain.Poll;
 import digital.future.vote.backend.domain.PollQuestion;
-import io.micronaut.core.annotation.Introspected;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import javax.validation.constraints.FutureOrPresent;
-import java.time.Instant;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Introspected
 public class PollDto {
     @NonNull String title;
     String description;
 
     @NonNull
-    @FutureOrPresent
-    Instant timeStart;
+    Timestamp timeStart;
 
     @NonNull
-    @FutureOrPresent
-    Instant timeEnd;
+    Timestamp timeEnd;
 
     @NonNull List<PollQuestion> questions;
 
     ParticipantList participantList;
 
-    public void updateEntity(@NonNull Poll poll) {
+    public void updateEntity(Poll poll) {
         poll.setTitle(title);
         poll.setDescription(description);
         poll.setTimeStart(timeStart);

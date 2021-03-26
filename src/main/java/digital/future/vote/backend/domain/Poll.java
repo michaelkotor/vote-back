@@ -1,21 +1,18 @@
 package digital.future.vote.backend.domain;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import digital.future.vote.backend.util.UID;
-import io.micronaut.context.annotation.Type;
-import io.micronaut.core.annotation.TypeHint;
-import io.micronaut.data.annotation.*;
-import io.micronaut.data.jdbc.annotation.ColumnTransformer;
-import io.micronaut.data.model.DataType;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import javax.persistence.Id;
 
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
 @Data
-@MappedEntity
+@Entity
 @NoArgsConstructor(access = AccessLevel.PUBLIC)
 @AllArgsConstructor(access = AccessLevel.PACKAGE)
 @RequiredArgsConstructor(access = AccessLevel.PUBLIC)
@@ -32,36 +29,30 @@ public class Poll {
     String description;
 
     @NonNull
-    @TypeDef(type = DataType.TIMESTAMP)
-    Instant timeStart;
+    Timestamp timeStart;
 
     @NonNull
-    @TypeDef(type = DataType.TIMESTAMP)
-    Instant timeEnd;
+    Timestamp timeEnd;
 
-    @DateCreated
-    @TypeDef(type = DataType.TIMESTAMP)
-    Instant created;
+    @CreationTimestamp
+    Timestamp created;
 
-    @DateUpdated
-    @TypeDef(type = DataType.TIMESTAMP)
-    Instant updated;
+    @UpdateTimestamp
+    Timestamp updated;
 
-    @TypeDef(type = DataType.JSON)
+    @OneToMany
     List<PollQuestion> questions;
 
-    @TypeDef(type = DataType.JSON)
+    @OneToOne
     ParticipantList participantList;
 
-    UID publicUid;
-
     @Transient
-    public Status getStatus() {
+    public Status getStatus(UID publicUid) {
         Instant now = Instant.now();
-        if (now.isAfter(timeEnd)) {
+        if (now.isAfter(timeEnd.toInstant())) {
             return Status.ENDED;
         }
-        if (now.isAfter(timeStart)) {
+        if (now.isAfter(timeStart.toInstant())) {
             return Status.ACTIVE;
         }
         if (publicUid != null) {

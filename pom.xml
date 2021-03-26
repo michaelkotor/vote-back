@@ -3,7 +3,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.3</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
     <groupId>digital.future.vote</groupId>
     <artifactId>vote-back</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -15,344 +20,70 @@
         <jdk.version>11</jdk.version>
         <maven.compiler.release>11</maven.compiler.release>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <exec.mainClass>digital.future.vote.backend.VoteApplication</exec.mainClass>
-        <micronaut.version>2.3.1</micronaut.version>
-        <micronaut.security.version>2.3.0</micronaut.security.version>
-        <micronaut.data.version>2.2.4</micronaut.data.version>
-        <lombok.version>1.18.16</lombok.version>
-        <junit.version>[4.13.1,)</junit.version>
-        <target.image>[[[unknown_image_name]]]</target.image> <!-- default -->
     </properties>
-
-    <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>io.micronaut</groupId>
-                <artifactId>micronaut-bom</artifactId>
-                <version>${micronaut.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
+                <groupId>com.google</groupId>
+                <artifactId>bitcoinj</artifactId>
+                <version>0.11.3</version>
             </dependency>
             <dependency>
-                <groupId>io.micronaut.data</groupId>
-                <artifactId>micronaut-data-bom</artifactId>
-                <type>pom</type>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>30.1-jre</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>com.h2database</groupId>
+                <artifactId>h2</artifactId>
+                <version>1.4.200</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger2</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>io.springfox</groupId>
+                <artifactId>springfox-swagger-ui</artifactId>
+                <version>2.9.2</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.18</version>
+                <scope>provided</scope>
+            </dependency>
+
+
         </dependencies>
-    </dependencyManagement>
-
-    <dependencies>
-        <!-- Base58 Encoding -->
-        <dependency>
-            <groupId>com.google</groupId>
-            <artifactId>bitcoinj</artifactId>
-            <version>0.11.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>30.1-jre</version>
-        </dependency>
-
-        <!-- Micronaut -->
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-inject</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-validation</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-http-server-netty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-http-client</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-runtime</artifactId>
-        </dependency>
-        <dependency> <!-- Allows monitoring via /admin/<endpoint> -->
-            <groupId>io.micronaut</groupId>
-            <artifactId>micronaut-management</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jsr310</artifactId>
-        </dependency>
-        <dependency> <!-- To use custom creators  / todo: consider removing - didnt help-->
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- ================== -->
-        <!--  DATABASE RELATED  -->
-        <!-- ================== -->
-
-        <!-- Direct JDBC support (if Hibernate not welcomed) -->
-        <dependency>
-            <groupId>io.micronaut.data</groupId>
-            <artifactId>micronaut-data-jdbc</artifactId>
-        </dependency>
-        <!-- need? -->
-        <dependency>
-            <groupId>io.micronaut.data</groupId>
-            <artifactId>micronaut-data-model</artifactId>
-        </dependency>
-        <!-- need? -->
-        <dependency>
-            <groupId>io.micronaut.data</groupId>
-            <artifactId>micronaut-data-tx</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.micronaut.data</groupId>
-            <artifactId>micronaut-data-runtime</artifactId>
-        </dependency>
-        <!-- Data Source / Connection pool -->
-        <dependency>
-            <groupId>io.micronaut.sql</groupId>
-            <artifactId>micronaut-jdbc-hikari</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <!-- DB Migration Scripts Management -->
-        <dependency>
-            <groupId>io.micronaut.flyway</groupId>
-            <artifactId>micronaut-flyway</artifactId>
-        </dependency>
-        <!-- JDBC Drivers -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency> <!-- for Google Cloud SQL -->
-            <groupId>com.google.cloud.sql</groupId>
-            <artifactId>postgres-socket-factory</artifactId>
-            <version>1.2.0</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- Security -->
-        <dependency>
-            <groupId>io.micronaut.security</groupId>
-            <artifactId>micronaut-security-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.security</groupId>
-            <artifactId>micronaut-security-jwt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.security</groupId>
-            <artifactId>micronaut-security-oauth2</artifactId>
-        </dependency>
-
-        <!-- Swagger -->
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>swagger-ui</artifactId>
-            <version>3.40.0</version>
-        </dependency>
-
-
-        <!-- Avoid boilerplate code for DTO and VO with @Data and @Value annotations -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Unit testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.micronaut.test</groupId>
-            <artifactId>micronaut-test-junit5</artifactId>
-            <scope>test</scope>
-        </dependency>
-    </dependencies>
-
-
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
-                    <encoding>UTF-8</encoding>
-                    <!--                    <fork>true</fork>-->
-                    <!-- Uncomment to enable incremental compilation -->
-                    <!-- <useIncrementalCompilation>false</useIncrementalCompilation> -->
-                    <annotationProcessorPaths combine.children="append">
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.micronaut</groupId> <!-- Introspection -->
-                            <artifactId>micronaut-inject-java</artifactId>
-                            <version>${micronaut.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.micronaut</groupId>
-                            <artifactId>micronaut-validation</artifactId>
-                            <version>${micronaut.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.micronaut.data</groupId>
-                            <artifactId>micronaut-data-processor</artifactId>
-                            <version>${micronaut.data.version}</version>
-                        </path>
-                        <path> <!-- for swagger annotations -->
-                            <groupId>io.micronaut.openapi</groupId>
-                            <artifactId>micronaut-openapi</artifactId>
-                            <version>${micronaut.version}</version>
-                        </path>
-                        <path>
-                            <groupId>io.micronaut.security</groupId>
-                            <artifactId>micronaut-security-annotations</artifactId>
-                            <version>${micronaut.security.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
-                    <compilerArgs>
-                        <arg>-Amicronaut.processing.group=digital.future.vote</arg>
-                        <arg>-Amicronaut.processing.module=vote-back</arg>
-                        <arg>-J-Dmicronaut.openapi.views.spec=swagger-ui.enabled=true,swagger-ui.theme=flattop</arg>
-                    </compilerArgs>
+                    <image>
+                        <name>vote-back</name>
+                    </image>
                 </configuration>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>digital.future.vote.backend.VoteApplication</mainClass>
-                            <addClasspath>true</addClasspath>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <version>4.0.3</version>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.cloud.tools</groupId>
-                <artifactId>jib-maven-plugin</artifactId>
-                <version>2.7.0</version>
-                <configuration>
-                    <from>
-                        <image>openjdk:11-slim</image>
-                    </from>
-                    <to>
-                        <image>${target.image}</image>
-                        <!-- optional: create a tag based on the git commit id (via the git-commit-id plugin): -->
-                        <tags>
-                        </tags>
-                    </to>
-                    <container>
-                        <jvmFlags>
-                            <jvmFlag>-server</jvmFlag>
-                            <jvmFlag>-Xms128M</jvmFlag>
-                            <jvmFlag>-Xmx128M</jvmFlag>
-                            <!-- These options help troubleshoot memory issues -->
-                            <jvmFlag>-XX:NativeMemoryTracking=summary</jvmFlag>
-                            <jvmFlag>-XX:+UnlockDiagnosticVMOptions</jvmFlag>
-                            <jvmFlag>-XX:+PrintNMTStatistics</jvmFlag>
-                        </jvmFlags>
-                    </container>
-                </configuration>
-            </plugin>
-
-
-            <!--            <plugin>-->
-            <!--                <groupId>org.openapitools</groupId>-->
-            <!--                <artifactId>openapi-generator-maven-plugin</artifactId>-->
-            <!--                <version>4.2.2</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <goals>-->
-            <!--                            <goal>generate</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <inputSpec>${project.basedir}/src/main/resources/api.json</inputSpec>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--            </plugin>-->
-
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version> <!-- version 2.X.X doesnt run JUnit 5 tests! -->
-                <!-- Below deps seems not required for ver3, but required for 2.19,
-                for 2.20+ no test will found unless you permit illegal-access -->
-                <!--                <dependencies>-->
-                <!--                    <dependency>-->
-                <!--                        <groupId>org.junit.platform</groupId>-->
-                <!--                        <artifactId>junit-platform-surefire-provider</artifactId>-->
-                <!--                        <version>1.1.0</version>-->
-                <!--                    </dependency>-->
-                <!--                    <dependency>-->
-                <!--                        <groupId>org.junit.jupiter</groupId>-->
-                <!--                        <artifactId>junit-jupiter-engine</artifactId>-->
-                <!--                        <version>5.7.0</version>-->
-                <!--                    </dependency>-->
-                <!--                </dependencies>-->
-                <configuration>
-                    <excludes>
-                        <exclude>**/*ITest.java</exclude>
-                    </excludes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>integration-test</id>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <phase>integration-test</phase>
-                        <configuration>
-                            <excludes>
-                                <exclude>none</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/*ITest.java</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
+                <version>2.4.3</version>
             </plugin>
         </plugins>
     </build>

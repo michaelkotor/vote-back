@@ -2,12 +2,10 @@ package digital.future.vote.backend.repo;
 
 import digital.future.vote.backend.domain.Vote;
 import digital.future.vote.backend.util.UID;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.model.query.builder.sql.Dialect;
-import io.micronaut.data.repository.CrudRepository;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-
-@JdbcRepository(dialect = Dialect.POSTGRES)
+@Repository
 public interface VoteRepo extends CrudRepository<Vote, UID> {
 
 }

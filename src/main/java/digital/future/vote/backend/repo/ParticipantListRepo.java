@@ -1,19 +1,15 @@
 package digital.future.vote.backend.repo;
 
-
 import digital.future.vote.backend.domain.ParticipantList;
-import io.micronaut.data.annotation.Query;
-import io.micronaut.data.jdbc.annotation.JdbcRepository;
-import io.micronaut.data.model.query.builder.sql.Dialect;
-import io.micronaut.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-
-
-@JdbcRepository(dialect = Dialect.POSTGRES)
+@Repository
 public interface ParticipantListRepo extends CrudRepository<ParticipantList, Long> {
 
-    @Query("SELECT pl.participants FROM particpant_list AS pl WHERE pl.id = :listId")
-    Iterable<String> listParticipants(Long listId);
+   // @Query("SELECT pl.participants FROM participant_list AS pl WHERE pl.id = :listId")
+   // Iterable<String> listParticipants(Long listId);
 
 //    //TODO
 //    void addParticipantsBulk(Long listId, String... participantIds);

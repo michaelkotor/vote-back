@@ -1,6 +1,5 @@
 package digital.future.vote.backend.domain;
 
-import io.micronaut.data.annotation.Embeddable;
 import lombok.Value;
 
 /**

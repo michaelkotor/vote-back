@@ -3,10 +3,11 @@ package digital.future.vote.backend.util;
 import com.fasterxml.jackson.annotation.JsonValue;
 import com.google.bitcoin.core.AddressFormatException;
 import com.google.bitcoin.core.Base58;
+import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
 import java.util.Arrays;
-
+@Component
 public class UID {
     static SecureRandom rnd = new SecureRandom();
     static int DEFAULT_SIZE = 20; // bytes

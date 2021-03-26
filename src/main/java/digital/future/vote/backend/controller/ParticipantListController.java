@@ -2,44 +2,41 @@ package digital.future.vote.backend.controller;
 
 import digital.future.vote.backend.domain.ParticipantList;
 import digital.future.vote.backend.repo.ParticipantListRepo;
-import io.micronaut.http.MediaType;
-import io.micronaut.http.annotation.*;
-import io.micronaut.security.annotation.Secured;
-import io.micronaut.security.rules.SecurityRule;
 import lombok.NonNull;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
-
-@Controller("/participants")
-@Secured(SecurityRule.IS_ANONYMOUS) //TODO
+@RestController
+@RequestMapping("/participants")
+//@Secured({"ROLE_ANONYMOUS"}) //TODO
 public class ParticipantListController {
-    @Inject
+    @Autowired
     ParticipantListRepo participantListRepo;
 
-    @Get
+
     public Iterable<ParticipantList> getLists() {
         return participantListRepo.findAll();
     }
 
-    @Get("/id/{id}")
+    @GetMapping("/id/{id}")
     public ParticipantList getListById(@NonNull Long id) {
-        return participantListRepo.findById(id).orElseThrow();
+        return participantListRepo.findById(id).get();
     }
 
-    @Post
+    @PostMapping
     public ParticipantList saveList(ParticipantList list) {
         return participantListRepo.save(list);
     }
 
-    @Put("/id/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public ParticipantList updateList(@NonNull Long id, @NonNull @Body ParticipantList in)  {
-        ParticipantList stored = participantListRepo.findById(id).orElseThrow();
+    @PutMapping(path = "/id/{id}", consumes = "application/json")
+    public ParticipantList updateList(@NonNull Long id, @NonNull ParticipantList in)  {
+        ParticipantList stored = participantListRepo.findById(id).get();
         // validate?
-        return participantListRepo.update(in);
+        return participantListRepo.save(in);
     }
 
-    @Delete(value = "/id/{id}", consumes = MediaType.ALL)
+    @DeleteMapping(value = "/id/{id}")
     public void deleteList(@NonNull Long id) {
         participantListRepo.deleteById(id);
     }

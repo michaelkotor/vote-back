@@ -1,15 +1,22 @@
 package digital.future.vote.backend.domain;
 
-import io.micronaut.core.annotation.Introspected;
 import lombok.*;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.List;
 
 @Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PUBLIC)
-@Introspected
 public class PollQuestion {
+    @Id
+    @GeneratedValue
+    Long id;
     @NonNull String question;
+    @ElementCollection
     @NonNull List<String> options;
 }
